@@ -1,7 +1,7 @@
 # KIP: Post-Quantum Signature Scheme for Kaspa  
 **Author:** gaurav (@bitcoinssg)  
-**Created:** 2024-03-15  (000000000000000000010635661b56dac86465e715d9cca0ab51c03f9fb6c456)
-**Status:** Draft  
+**Created:** 2024-03-15  (000000000000000000010635661b56dac86465e715d9cca0ab51c03f9fb6c456)   
+**Status:** Unreviewed Rough Draft  
 **Type:** Standards Track  
 **Category:** Core  
 
