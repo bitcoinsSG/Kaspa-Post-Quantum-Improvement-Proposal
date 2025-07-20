@@ -1,4 +1,4 @@
-#!/bin/bash  
+ #!/bin/bash  
 
 # Create data dir if missing  
 mkdir -p ./kaspa-data  

@@ -1,0 +1,22 @@
+Hello Everyone, I've been dreading this moment because I anticipate push back, and no one wants to be the person going against the grain.
+
+However, solidarity is only valuable if we're solidartity for the right reasons, and I consider security something we need to be honest and scientific.
+My proposal for PQC is going to be broken down into several phases, each phase will be separate, and will have to go through approval process seperately. 
+They are also non-dependent, so my preference is consider each one separately.
+
+My request is for phase I
+I've try hard to think about using existing logic to simulate p2pkh security (for example p2sh), but I can't think of a way that doesn't reduce UX. The out of network exchange of redeem script , and burden of wallets to retain them is unnecessary complication in my opinion. If there is a way to perfectly simulate simple p2pkh as a p2sh with no repucutions to user experience I will gladly modify my thought process.
+
+My priority is to protect the community. SQDay will come before GQDay,  maybe even 10 years in between.  On SQDay we will be caught with our pants down (excuse the expression), even for users that follow the "not your keys, not your coins" and "don't reuse addresses" axioms.
+I think a p2pkh op code, and new address type is reasonable and warranted. It's 2025, every timechain implements some sort of comproble security barrier that requires an attacker to contend with Grover. Kaspa, unlike Bitcoin, has a neglible short exposure attack vector. Cracking of keys in the time between transaction broadcast and confirmations. Which means, even if Kaspa implements the same type of hashing security as Bitcoin, it will achieve greater security. The bigger concern here is that all addresses, or atleast most coins are vulnerable to long exposure attacks without the hashing logic, and people take time to migrate coins even after migration. Implementing a new address type that is simple in concept but secure and ubiquitous in the rest of the industry should be a non-controversial change. If you are worried about the fact that a change like this would affect all txs and might carry with it "risks" of breaking a working system, please remember, introducing a new address type doesn't change anything about the past or the way the system operates. Using the new address types is completely voluntary and backward compatible, and not one needs to use it if they don't want to. However, our network should have a secure option for storage. As our visibility increases and larger intitutions take interest, they may choose not to simply because of not having it. Even the less technical types will expect it because of how ubiquitous it is in the rest of the industry; if they don't notice, their colleges will.
+
+Additionaly, my preference is to improve on Bitcoin's existing security model within this context. Yes, I did think of simply hashing the public key using blake2b, it would have been less controversial since its less of a change than introducting soemthing new. I think there is a middle ground, but let me explain my rationale first. Kaspa should be considered a evolution on many fronts. Quantum computers are going to be annoying news that only increase in "volume" and create more panick. As the lovely members of our community selflessly promugate the network, the topic and comparison of Quantum attack vectors will come up, and more frequently. I tjhink adopting a similar protection level as Bitcoin will not cut it. My proposal is as follows, and if there is approval, I will gladly run comparison tests to gauge any performance changes. I was thinking about performing them before this post, but I don't want to waste time, it would be more dissapointing if my proposal gets completely rejects after weeks of work, so I thought I'd break the ice now.
+
+Proposal:
+- Add hashing to public key
+256bit hash digest(blake2b) ( 512bit hash digest blake3 512 ( public key))
+- Add a new op_code p2pkh
+- Introduce a new address type
+- 
+
+
