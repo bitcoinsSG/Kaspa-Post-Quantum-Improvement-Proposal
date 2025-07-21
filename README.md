@@ -24,7 +24,7 @@ The current Kaspa address scheme exposes public keys, potentially rendering coin
 
 ## Rationale
 
-The selection of BLAKE2b is based on its existing implementation within Kaspa, which promotes efficiency and minimizes necessary codebase modifications. The choice of Bech32 version 24 serves to distinctly identify P2PKH addresses from existing address types. The proposed redeem script is more concise than Bitcoin's equivalent (omitting OP_DUP and OP_HASH160), which may reduce overhead while maintaining the required security properties.
+The selection of BLAKE2b is based on its existing implementation within Kaspa, which promotes efficiency and minimizes necessary codebase modifications. The choice of Bech32 version 20 serves to distinctly identify P2PKH addresses from existing address types. The proposed redeem script is more concise than Bitcoin's equivalent (omitting OP_DUP and OP_HASH160), which may reduce overhead while maintaining the required security properties.
 
 ## Backward Compatibility
 
