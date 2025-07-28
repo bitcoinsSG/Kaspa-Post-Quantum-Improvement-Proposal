@@ -1,196 +1,205 @@
-# Kaspa Improvement Proposal (KIP-XX)
 
-## Title
-**Add Dual-Key Address Format (ECDSA + SPHINCS+) for Seamless Post-Quantum Transition as a Soft Fork**
+```markdown
+# KIP: XXXX
+Layer: Application/Consensus  
+Title: Kaspa's Path Towards Quantum Resiliency: A Comprehensive 4-Phase Strategy  
+Type: Informal draft
+**Author:** Gaurav Rana <BitcoinsSSG@gmail.com>  
+**Created:** 2025-05-27  
+Updated: 2025-Xtatus: Draft  
+```
 
-## Author
-gaurav
 
-## Status
-Draft
+'''markdown 
 
-## Created
-Human Time: 2025-04-28
-Bitcoin Time: 000000000000000000010635661b56dac86465e715d9cca0ab51c03f9fb6c456
 
----
 
+KIP: XXXX
+Layer: Application (wallet/tooling)
+Title: P2PKH-Blake2b-256-via-P2SH Shor's Algorithm Resistant Addresses
+Type: Standards Track
+Author: Gaurav Rana <BitcoinsSSG@gmail.com>
+Created: 2025-05-27
+Updated: 2025-XX-XX
+Status: Draft
 ## Abstract
 
-This KIP proposes a new address format embedding both an ECDSA (secp256k1) public key hash and a SPHINCS+ public key hash within a compact structure. It enables seamless migration from classical cryptographic validation to post-quantum signature validation without requiring user-side reissuance or disruptive network-wide migrations.
-
----
-
-## Summary
-
-We propose the introduction of a dual-key address format that embeds both an ECDSA (secp256k1) public key hash and a SPHINCS+ public key hash into Kaspa addresses. This would allow immediate classical validation (ECDSA) while future-proofing Kaspa for seamless post-quantum transition to SPHINCS+ without requiring immediate user-side migrations or major network disruptions.
-
----
+This KIP outlines Kaspa's comprehensive 4-phase strategy for achieving quantum resiliency against the emerging threat of quantum computers capable of running Shor's algorithm. Rather than implementing a disruptive single-step migration, this proposal presents a progressive approach that begins with immediate wallet-layer protections and gradually evolves toward full post-quantum cryptographic integration. This strategy ensures backward compatibility, minimizes user disruption, and provides multiple layers of defense against quantum threats while maintaining Kaspa's high-throughput performance characteristics.
 
 ## Motivation
 
-As quantum computing advances, the cryptographic assumptions underpinning Kaspa's current signature system (ECDSA/secp256k1) face potential obsolescence. 
+Quantum computers running Shor's algorithm pose an existential threat to elliptic curve cryptography, which underpins Kaspa's current security model. Current projections estimate quantum threats maturing within 10 to 15 years, necessitating proactive preparation. However, immediate migration to post-quantum cryptography would impose significant performance penalties and user experience degradation.
 
-This proposal introduces a lightweight, forward-compatible enhancement to Kaspa’s address format: embedding dual-key addresses that carry both an ECDSA public key hash and a SPHINCS+ public key hash. This design allows current transactions to operate efficiently using ECDSA, while enabling a seamless, user-transparent transition to quantum-resilient SPHINCS+ validation when needed.
+The 4-phase approach addresses these challenges by providing immediate protection through wallet-layer solutions, enabling gradual adoption without forced migrations, maintaining network performance during transition periods, offering multiple fallback options as post-quantum cryptography standards mature, and ensuring no user loses funds during quantum transitions.
 
-The address format adds minimal overhead (~54 bytes), supports hierarchical deterministic (HD) key derivation from a single master seed, and ensures that no user-side coin migration or forced reissuance events will be necessary. 
+## Strategic Overview
 
-Critically, this upgrade is modular, soft-fork compatible, and protects both present and future Kaspa users without sacrificing current network performance.
+### [Phase I](https://github.com/bitcoinsSG/Kaspas-Phase-I-Towards-Quantum-Resiliency/tree/main) Immediate Wallet-Layer Protection
 
----
+**Status:** Rough Draft Completed 
+[Technical Specifications](https://github.com/bitcoinsSG/Kaspas-Phase-I-Towards-Quantum-Resiliency/blob/78c30baa77266a5f23458a2a8898d1713d9828f7/technical_specifications-v-2-0-6.md)
 
-## Specification
+available  
+**Timeline:** Immediate deployment capability  
+**Impact:** No consensus changes required  
 
-### Address Structure
+Phase I introduces P2PKH-Blake2b-256-via-P2SH addresses that hide public keys behind cryptographic commitments until spend time. This provides immediate Shor's algorithm resistance for new addresses while requiring no protocol modifications.
 
-- **Version (1 byte):** Denotes dual-key address.
-- **ECDSA Pubkey Hash (20 bytes):** RIPEMD160(SHA256(ECDSA Pubkey)).
-- **SPHINCS+ Pubkey Hash (32 bytes):** SHA256(SPHINCS+ Pubkey).
-- **Flags (1 byte):** Spending rules:
-  - `0x01` — ECDSA required.
-  - `0x02` — SPHINCS+ required.
-  - `0x03` — Accept either (for transition period).
+The phase delivers immediate deployment capability, zero consensus overhead, voluntary user adoption, full backward compatibility, and protection against quantum attacks on newly created addresses.
 
-### Spending Rules
+Phase I utilizes Kaspa's existing P2SH infrastructure to create addresses where public keys are committed via Blake2b-256 hashing, public key revelation is deferred until transaction spending, quantum adversaries cannot extract private keys from unused addresses, and standard wallet tooling can be updated without protocol changes.
 
-- **Pre-Quantum Threat:** Validate transactions by matching the ECDSA public key hash and verifying the ECDSA signature.
-- **Post-Quantum Threat:** Validate transactions by matching the SPHINCS+ public key hash and verifying the SPHINCS+ signature.
-- **Transition Period:** Allow accepting either signature type during a transition period via appropriate network soft fork.
+The security model protects against quantum adversaries who can break the Elliptic Curve Discrete Logarithm Problem but cannot invert Blake2b-256 hashes, require public key exposure to mount quantum attacks, and cannot break the underlying hash-based commitment scheme.
 
-### Transaction Format Changes
+### Phase II: Enhanced Post-Quantum Cryptographic Integration to guard against Grover's algorithm.
 
-- Inputs must specify which public key is being used for signing.
-- Signature field must match the expected cryptographic scheme based on the network mode.
+**Status:** [To be published after Phase I]  
+**Timeline:** [To be determined]  
+**Impact:** [To be determined]  
 
----
+### [!!] Phase II: pRotecting again Grover [Work 
 
-## Implementation Notes
+### [!!!Phase III: Network-Wide Post-Quantum Transition Mechanisms
 
-- Wallets must generate a dual-keypair (ECDSA + SPHINCS+) at address creation.
-- Wallets must avoid address reuse.
-- HD derivation must be extended to derive both ECDSA and SPHINCS+ keypairs deterministically from a single master seed.
-- Nodes must be upgraded to parse and validate dual-key address structures.
+**Status:** [To be published after Phase I]  
+**Timeline:** [To be determined]  
+**Impact:** [To be determined]  
 
----
+Phase III: [Notm
+[Technical specifications and implementation details to be published after Phase I completion]
 
-## Advantages
+### Phase IV: Full Post-Quantum Cryptographic Implementation
 
-- Smooth migration path to post-quantum security.
-- Minimal address size overhead (~54 bytes raw payload).
-- No user disruption or forced coin migration.
-- Compatible with DAG parallel validation architecture.
+**Status:** [To be published after Phase I]  
+**Timeline:** [To be determined]  
+**Impact:** [To be determined]  
 
----
+Phase IV represents the culmination of Kaspa's quantum resiliency strategy, implementing complete post-quantum cryptographic protection across all network operations while maintaining the performance characteristics that define Kaspa's competitive advantage.
 
-## Acknowledgements
+[Technical specifications and implementation details to be published after Phase I completion]
 
-This proposal draws from principles found in Bitcoin’s SegWit upgrade, hierarchical deterministic wallets (BIP-32), and NIST PQC standardization efforts.
+## Phase I: Detailed Technical Specification
 
----
+### Address Format: P2PKH-Blake2b-256-via-P2SH
 
-# Why This Dual-Key Address Proposal is Better than Alternatives
+The generation process begins with a 32-byte Schnorr public key as input. The system creates a redeem script containing the public key and OP_CHECKSIG operation. Blake2b-256 hashing is applied to the script to produce the script hash. The script hash is then encoded using existing Kaspa address serialization to create the P2SH address.
 
----
+The spending process requires users to provide the Schnorr signature and the Blake2b-256 hash of the redeem script. The unlock script follows the format of signature followed by script hash.
 
-## 1. Compared to "Full Immediate PQC Migration" (e.g., using SPHINCS+ or Falcon today)
+Validation proceeds by verifying that the provided script hash matches the address, executing the redeem script with the provided signature, and confirming that the signature validates against the revealed public key.
 
-| Immediate Full PQC Migration | Dual-Key Proposal |
-|-------------------------------|--------------------|
-| Huge transaction sizes (e.g., SPHINCS+ signatures ~8 KB). | Normal small transaction sizes today (~250 bytes). |
-| Major increase in network bandwidth, storage, validation time. | No material change in performance until needed. |
-| Forces all users to accept immature PQC standards immediately. | Users continue using mature ECDSA until quantum risk materializes. |
-| Difficult, risky upgrades if PQC standards change again. | Modular, flexible switching based on soft-fork decision. |
+### Security Analysis
 
-**Summary:** Dual-key approach preserves today's performance and maturity while enabling future security — without unnecessary disruption.
+Current P2PK addresses expose public keys immediately upon funding, creating high quantum risk through exposed Elliptic Curve Discrete Logarithm Problems with zero years of protection timeline. The P2PKH-Blake2b-256-via-P2SH approach defers public key exposure until spend time, mitigates quantum risk through hash pre-image protection, and provides effective protection immediately upon implementation.
 
----
+### Implementation Requirements
 
-## 2. Compared to "Falcon-Only Migration"
+Wallet layer implementation requires default generation of P2PKH-Blake2b-256-via-P2SH addresses, updates to CLI tools and SDKs for the new address format, user interface modifications that communicate quantum protection benefits, and gradual transition prompts for users with legacy P2PK addresses.
 
-| Falcon-Only Migration | Dual-Key Proposal |
-|------------------------|-------------------|
-| Falcon signatures are relatively small (~666 bytes) but still ~10× larger than ECDSA. | No transaction size inflation today; only when needed. |
-| Falcon requires complex side-channel attack hardening (Gaussian sampling). | Dual-key structure allows fallback to SPHINCS+ — purely hash-based, side-channel hardened by design. |
-| Falcon implementations are less battle-tested than ECDSA. | ECDSA remains battle-hardened and operational today. |
+Exchange integration necessitates support for sending to and receiving from new address types, updates to address validation and parsing systems, and clear security communication to users regarding quantum protection benefits.
 
-**Summary:** Dual-key approach provides flexibility: fallback to SPHINCS+'s provable security if Falcon or other lattices are later broken or deemed unsafe.
+Developer tooling includes the kaspa-p2pkh-blake2b Rust library, CLI utilities for key generation and script building, comprehensive test suites for compatibility validation, and detailed developer documentation with implementation guides.
 
----
+## Migration Strategy
 
-## 3. Compared to "Address Reissuance Upon Quantum Threat"
+### Phase I Deployment
 
-| Mass Address Reissuance | Dual-Key Proposal |
-|--------------------------|-------------------|
-| Requires all users to move funds quickly. | No action needed by users; future-proof from creation. |
-| Risk of lost coins if users are offline or lose keys. | Funds remain safe because post-quantum keys are pre-published. |
-| High stress and uncertainty at the network level. | Smooth, gradual transition via soft forks. |
+The timeline anticipates one to three months for ecosystem adoption. The method involves voluntary wallet upgrades accompanied by comprehensive user education. Continued support for legacy P2PK addresses provides fallback options. Security-conscious users and institutions are expected to adopt the new format first, creating positive incentives for broader adoption.
 
-**Summary:** Dual-key structure guarantees safe continuity without mass migrations or user disruption.
+### Inter-Phase Transitions
 
----
+Each subsequent phase builds upon established infrastructure. Phase II leverages Phase I's commitment-based approach to introduce additional post-quantum mechanisms. Phase III utilizes migration patterns established in earlier phases. Phase IV completes the transition to full post-quantum cryptographic implementation while maintaining backward compatibility.
 
-## 4. Compared to "Hybrid Signature Inclusion in Each Transaction" (ECDSA + Falcon Today)
+## Economic Impact Analysis
 
-| Hybrid Signature Today | Dual-Key Proposal |
-|-------------------------|-------------------|
-| Every transaction carries two signatures even when unnecessary. | Only one signature (ECDSA) until quantum risk requires otherwise. |
-| Bloats all current transactions. | No bloating today; ready when needed. |
-| Requires complex parsing and validation today. | Simplified parsing until the quantum shift. |
+### Phase I Cost-Benefit Assessment
 
-**Summary:** Dual-key approach defers cost and complexity until truly necessary.
+The additional overhead consists of minimal script size increases compared to P2PK addresses. Performance impact remains negligible with respect to transaction validation overhead. Security benefits include complete protection against Shor's algorithm for new addresses. Adoption costs are limited to wallet development and user education initiatives.
 
----
+### Long-term Economic Benefits
 
-# Ultimate Scientific Justification
+Enhanced security positioning provides competitive advantages over quantum-vulnerable networks. Institutional adoption increases due to proactive quantum preparedness. The network gains competitive advantage during quantum threat materialization. Reduced systemic risk improves overall ecosystem stability and confidence.
 
-The Dual-Key Address Format uniquely balances present-day efficiency, user simplicity, and post-quantum security. It defers complexity and bandwidth costs until truly needed, while guaranteeing no forced migrations or risk of asset loss under quantum threats. It is modular, flexible, and fully compatible with Kaspa’s high-throughput DAG architecture.
+## Ecosystem Impact
 
----
+### User Experience
 
-# Comparative Analysis of PQC Algorithms for Dual-Key Future-Proofing
+Phase I implementation remains seamless for users with updated wallets. Future phases provide progressive enhancement without operational disruption. Clear communication of quantum risks and timelines supports informed user decision-making. Users maintain the ability to opt-in at their preferred pace without forced migrations.
 
----
+### Developer Ecosystem
 
-## Table: Key and Signature Size Comparison
+Comprehensive libraries support each phase of implementation. Clear technical specifications and practical examples facilitate developer adoption. Robust test suites ensure compatibility across different implementations. Consistent APIs across phase implementations reduce development complexity.
 
-| PQC Algorithm    | Public Key Size | Private Key Size | Signature Size | Notes |
-|------------------|-----------------|------------------|----------------|-------|
-| SPHINCS+ (128s fast) | 32 bytes        | 64 bytes         | ~8 KB           | Stateless, Hash-based, Extremely conservative security |
-| Falcon-512        | 897 bytes       | 1281 bytes        | 666 bytes        | Small signature, lattice-based, side-channel sensitive |
-| Dilithium-2       | 1312 bytes      | 2528 bytes        | 2420 bytes       | Larger signatures, lattice-based |
-| Picnic-L1-FS      | ~49 bytes       | ~49 bytes         | ~14 KB           | Very large signatures, hash-based |
-| Rainbow (abandoned) | n/a           | n/a               | n/a              | Broken (multivariate cryptography) |
+### Network Effects
 
----
+Security improvements occur gradually across the network as adoption increases. Performance characteristics are maintained throughout all transition phases. Full backward compatibility with legacy addresses ensures no operational disruption. Multiple upgrade paths provide flexibility based on evolving threat assessments.
 
-## Key Takeaways
+## Comparison with Alternative Approaches
 
-- SPHINCS+ public keys are extremely small (~32 bytes), comparable to ECDSA.
-- SPHINCS+ signatures are large (~8 KB), but **only needed** at the point of spending during the quantum threat era.
-- Other PQC candidates suffer from large public keys, complicated assumptions, or extremely large signatures.
-- SPHINCS+ is **stateless** and based on **well-understood hash security assumptions**, offering future flexibility.
+### Single-Step Post-Quantum Cryptography Migration
 
----
+Alternative approaches involving immediate migration to post-quantum cryptography suffer from massive transaction size increases, network performance degradation, and forced user migrations. The 4-phase advantage provides gradual adoption, maintained performance, and user choice in migration timing.
 
-## Scientific Summary
+### Immediate Hybrid Signatures
 
-> **SPHINCS+ in a dual-key address enables Kaspa to maintain high throughput, compact addresses, HD-wallet usability, and post-quantum resilience simultaneously. Other PQC schemes would compromise today's efficiency or introduce riskier assumptions.**
+Approaches requiring immediate hybrid signatures impose overhead on every transaction through dual signature requirements. The 4-phase advantage ensures overhead only occurs when quantum protection is actively needed.
 
----
+### Mass Address Reissuance
 
-# Compact Visual: PQC Candidate Weight Chart
+Mass reissuance approaches create risks of lost funds, significant user disruption, and network stress during transition periods. The 4-phase advantage eliminates forced migrations while ensuring funds remain secure throughout the transition process.
 
-### Public Keys
-ECDSA (~33 bytes) ≈ SPHINCS+ (~32 bytes) << Falcon (~900 bytes) < Dilithium (~1300 bytes)
+## Implementation Timeline and Dependencies
 
+Phase I implementation can commence immediately given the completion of technical specifications. The implementation requires wallet developer coordination, exchange integration planning, and user education campaign development. Success metrics include adoption rates among wallets, exchanges, and end users.
 
-### Signature Sizes
-ECDSA (~70 bytes) < Falcon (~666 bytes) < Dilithium (~2400 bytes) << SPHINCS+ (~8000 bytes) << Picnic (~14000 bytes)
+Subsequent phases depend on Phase I adoption rates, evolution of post-quantum cryptography standards, quantum computing development timelines, and ecosystem readiness for more comprehensive changes. Each phase will include detailed implementation timelines upon publication of technical specifications.
 
+## Risk Assessment and Mitigation
 
----
+### Technical Risks
 
-# Practical Implication
+The primary technical risk involves potential vulnerabilities in Blake2b-256 hash function implementation. Mitigation strategies include thorough security auditing, established cryptographic library usage, and comprehensive testing protocols.
 
-> SPHINCS+ lets us "hide" quantum safety in the address structure today without bloating transaction efficiency, and activate it smoothly only when needed.
+### Adoption Risks
 
+Adoption risks include slow wallet developer uptake and user resistance to address format changes. Mitigation approaches involve developer incentive programs, clear security benefit communication, and gradual transition support.
+
+### Ecosystem Risks
+
+Ecosystem risks encompass fragmentation between different address formats and compatibility issues across implementations. Mitigation strategies include standardized implementation guidelines, comprehensive testing requirements, and coordinated ecosystem communication.
+
+## Conclusion
+
+Kaspa's 4-phase approach to quantum resiliency represents a balanced strategy that prioritizes both immediate protection and long-term security evolution. Phase I provides immediate mitigation against Shor's algorithm attacks while requiring no consensus changes. Subsequent phases will build upon this foundation to achieve comprehensive post-quantum cryptographic protection.
+
+This strategy ensures that users receive immediate protection from quantum threats, network performance remains optimal during transitions, no forced migrations or fund loss scenarios occur, Kaspa maintains competitive advantage in the quantum era, and the ecosystem can adapt to evolving post-quantum cryptography standards.
+
+The technical specifications for Phase I are complete and ready for implementation. Subsequent phases will be detailed and published following successful Phase I deployment and comprehensive ecosystem feedback analysis.
+
+## References
+
+[1] P. W. Shor, "Algorithms for quantum computation: discrete logarithms and factoring," in Proceedings 35th Annual Symposium on Foundations of Computer Science, 1994, pp. 124-134. doi: 10.1109/SFCS.1994.365700
+
+[2] P. W. Shor, "Polynomial-time algorithms for prime factorization and discrete logarithms on a quantum computer," SIAM Journal on Computing, vol. 26, no. 5, pp. 1484-1509, 1997. [Online]. Available: https://arxiv.org/abs/quant-ph/9508027
+
+[3] National Institute of Standards and Technology, "NIST Releases First 3 Finalized Post-Quantum Encryption Standards," Aug. 13, 2024. [Online]. Available: https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards
+
+[4] National Institute of Standards and Technology, "Federal Information Processing Standard (FIPS) 203: Module-Lattice-Based Key-Encapsulation Mechanism Standard," 2024. [Online]. Available: https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved
+
+[5] National Institute of Standards and Technology, "Federal Information Processing Standard (FIPS) 204: Module-Lattice-Based Digital Signature Standard," 2024. [Online]. Available: https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved
+
+[6] National Institute of Standards and Technology, "Federal Information Processing Standard (FIPS) 205: Stateless Hash-Based Digital Signature Standard," 2024. [Online]. Available: https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved
+
+[7] Deloitte Netherlands, "Quantum computers and the Bitcoin blockchain," 2024. [Online]. Available: https://www.deloitte.com/nl/en/services/risk-advisory/perspectives/quantum-computers-and-the-bitcoin-blockchain.html
+
+[8] National Security Agency, "Commercial National Security Algorithm (CNSA) Suite 2.0," 2022. [Online]. Available: https://www.nsa.gov/
+
+[9] Quantum Computing Cybersecurity Preparedness Act, Public Law No: 117-103, U.S. Congress, 2022.
+
+## Acknowledgments
+
+Thanks to Ori Newman (@someone235), Michael Sutton (@missutton), FreshAir08 (@FreshAir08), Maxim Biryukov (@Max143672), KaffinPX (@KaffinPX), Ro Ma (@dimdumon), Shai (@DesheShai), Yonatan Sompolinsky (@hashdag), and all contributors to Kaspa's quantum resiliency research.
+
+## License
+
+This KIP is licensed under the MIT License.
